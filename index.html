@@ -1,0 +1,765 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#ED1B2E">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+<title>Giảng để Tin, Cảm để Yêu · Trainer Readiness</title>
+<style>
+:root{
+  --red:#ED1B2E;--red-dark:#B51226;--pink:#FFF0F2;--ink:#1D1D1F;--muted:#6E6E73;
+  --bg:#F5F5F7;--line:#E5E5EA;--green:#34C759;--green-bg:#F0FFF6;--warn-bg:#FFF8EE;
+  --wrong:#FF3B30;--wrong-bg:#FFF5F5;--mind:#0A84FF;--mind-bg:#EEF6FF;--heart:#ED1B2E;--heart-bg:#FFF0F2;
+  --shadow:0 20px 60px rgba(30,25,40,.06),0 3px 12px rgba(30,25,40,.03);
+  --ease:cubic-bezier(.2,.8,.2,1);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;min-height:100vh;min-height:100dvh;background:var(--bg);color:var(--ink);
+  font:16px/1.6 -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji";
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;-webkit-overflow-scrolling:touch;overscroll-behavior-y:none}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer;touch-action:manipulation;border:0;background:none;-webkit-user-select:none;user-select:none}
+button:disabled{opacity:.45;cursor:default}
+:focus-visible{outline:3px solid #0A84FF;outline-offset:3px}
+h1,h2,h3,p{margin:0}
+
+/* Ngắt dòng tự nhiên: không để chữ mồ côi, không ngắt giữa ý */
+h1,h2,h3,.review-title,.step b,.btn,.number,.eyebrow{text-wrap:balance}
+p,li,span,label,.review-status,.explanation,.scene,.ask,.opt,.correct-answer,.coach,.note{text-wrap:pretty}
+body{overflow-wrap:break-word;word-break:normal;hyphens:manual}
+.nowrap,.tag,.btn,.mini,.why-btn span,.clock,.big,.rank{white-space:nowrap}
+
+h1{font-size:clamp(34px,7vw,62px);line-height:1.08;letter-spacing:-.035em}
+h2{font-size:clamp(25px,4vw,36px);line-height:1.22;letter-spacing:-.025em}
+h3{font-size:18px;line-height:1.4}
+h1:focus,h2:focus{outline:none}
+.shell{width:min(100%,960px);margin:auto;padding:0 20px calc(40px + env(safe-area-inset-bottom))}
+
+/* Glass header */
+.top{position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  margin:0 -20px 20px;padding:calc(12px + env(safe-area-inset-top)) calc(20px + env(safe-area-inset-right)) 12px calc(20px + env(safe-area-inset-left));
+  background:rgba(245,245,247,.82);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);
+  border-bottom:1px solid rgba(0,0,0,.05)}
+.brand{color:var(--red);font-size:13px;font-weight:800;letter-spacing:.08em;white-space:nowrap}
+.brand-sub{color:var(--muted);font-size:12px}
+.clock-group{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.clock{font-weight:700;font-variant-numeric:tabular-nums;font-size:15px}
+
+.card{background:#fff;border-radius:28px;padding:32px;box-shadow:var(--shadow)}
+.hero{background:radial-gradient(circle at 95% 0,#FFE1E7 0,transparent 50%),#fff;padding:40px}
+.eyebrow{color:var(--red-dark);font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px}
+.red{color:var(--red)}.muted{color:var(--muted)}.small{font-size:13px}
+.lead{max-width:640px;color:var(--muted);font-size:18px;margin-top:18px}
+.hero-line{display:block}
+
+/* Mạch cảm xúc */
+.journey{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:26px 0 6px}
+.step{padding:16px 14px;border-radius:18px;background:#FAFAFC;border:1px solid var(--line)}
+.step .k{font-size:22px;line-height:1.2}
+.step b{display:block;font-size:14px;margin-top:6px;line-height:1.4}
+.step span.d{display:block;font-size:13px;color:var(--muted);line-height:1.45;margin-top:4px}
+.mh{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.tag{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:99px;line-height:1.5}
+.tag.mind{background:var(--mind-bg);color:var(--mind)}
+.tag.heart{background:var(--heart-bg);color:var(--heart)}
+.tag.act{background:#F2F2F7;color:var(--ink)}
+
+.intro-grid,.results{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:26px 0}
+.intro-item{padding:18px;border-radius:20px;background:#fff;border:1px solid #F0E7EA}
+.number{color:var(--red-dark);font-size:11px;font-weight:800;letter-spacing:.06em;margin-bottom:8px}
+.intro-item p{font-size:13.5px;margin-top:6px}
+
+/* Nút */
+.btn,.mini,.move{position:relative;overflow:hidden;border-radius:14px;min-height:50px;padding:12px 22px;font-weight:700;
+  transition:transform .2s var(--ease),background .2s,box-shadow .2s;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.btn{background:var(--red);color:#fff;box-shadow:0 8px 20px rgba(237,27,46,.18)}
+@media(hover:hover) and (pointer:fine){.btn:hover{background:var(--red-dark)}.secondary:hover{background:#E8E8ED}.mini:hover,.move:hover{background:#ECECF1}.opt:hover,.choice:hover{border-color:#D1D1D6}}
+.secondary{background:#F0F0F5;color:var(--ink);box-shadow:none}
+.mini{background:#F4F4F8;border:1px solid var(--line);min-height:44px;padding:9px 14px;font-size:14px}
+.move{background:#F4F4F8;border:1px solid var(--line);min-width:46px;min-height:46px;padding:6px;font-size:20px}
+button:not(:disabled):active,.opt:active,.choice:active{transform:scale(.97)}
+.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
+
+/* Progress */
+.progress{display:flex;gap:6px;margin-bottom:24px}
+.progress span{flex:1;height:6px;border-radius:9px;background:#E5E5EA;overflow:hidden;position:relative}
+.progress span::after{content:"";position:absolute;inset:0;background:var(--red);transform:scaleX(0);transform-origin:left;transition:transform .6s var(--ease)}
+.progress span.active::after{transform:scaleX(1)}
+.round-intro{color:var(--muted);margin:12px 0 22px;max-width:680px}
+.section-label{font-size:12px;font-weight:800;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin:26px 0 4px}
+
+/* Chọn nhiều */
+.choice{position:relative;overflow:hidden;display:flex;gap:14px;align-items:flex-start;padding:17px;margin:10px 0;
+  border:1.5px solid var(--line);border-radius:18px;cursor:pointer;transition:all .22s var(--ease);background:#fff}
+.choice input{position:absolute;opacity:0;pointer-events:none}
+.box{flex:0 0 24px;height:24px;border-radius:8px;border:2px solid #C7C7CC;display:grid;place-items:center;transition:all .22s var(--ease);margin-top:1px}
+.box::after{content:"✓";color:#fff;font-weight:900;font-size:14px;transform:scale(0);transition:transform .25s var(--ease)}
+.choice.on{border-color:var(--red);background:var(--pink)}
+.choice.on .box{background:var(--red);border-color:var(--red)}
+.choice.on .box::after{transform:scale(1)}
+.choice-text{flex:1;min-width:0}
+
+/* Chọn một */
+.q{padding:22px;border:1px solid var(--line);border-radius:22px;margin:14px 0;background:#fff}
+.q .scene{padding:14px 16px;border-radius:14px;background:#FAFAFC;border-left:4px solid var(--red);margin:10px 0 6px;font-size:15px}
+.q .ask{font-weight:700;margin-top:12px}
+.opt{position:relative;overflow:hidden;width:100%;text-align:left;display:flex;gap:12px;align-items:flex-start;padding:14px 16px;margin-top:10px;
+  border:1.5px solid var(--line);border-radius:16px;background:#fff;transition:all .22s var(--ease);line-height:1.5;font-size:15.5px}
+.opt .t{flex:1;min-width:0}
+.opt .dot{flex:0 0 22px;height:22px;border-radius:50%;border:2px solid #C7C7CC;margin-top:1px;transition:all .22s var(--ease);position:relative}
+.opt .dot::after{content:"";position:absolute;inset:4px;border-radius:50%;background:#fff;transform:scale(0);transition:transform .25s var(--ease)}
+.opt.on{border-color:var(--red);background:var(--pink)}
+.opt.on .dot{background:var(--red);border-color:var(--red)}
+.opt.on .dot::after{transform:scale(1)}
+
+/* Sắp xếp */
+.order-row{position:relative;overflow:hidden;display:flex;align-items:center;gap:12px;padding:14px;margin:10px 0;border:1px solid var(--line);border-radius:18px;background:#fff}
+.order-row.bump{animation:bump .35s var(--ease)}
+@keyframes bump{40%{transform:scale(1.025);box-shadow:0 10px 24px rgba(0,0,0,.08)}}
+.rank{display:grid;place-items:center;flex:0 0 36px;height:36px;background:var(--pink);color:var(--red-dark);font-weight:800;border-radius:11px}
+.order-name{flex:1;min-width:0;font-weight:650;line-height:1.45}
+.moves{display:flex;gap:6px;flex-shrink:0}
+
+/* Ghép cặp */
+.pair{border:1px solid var(--line);border-radius:22px;padding:22px;margin:14px 0;background:#fff}
+.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:16px}
+.field{display:block;font-size:13px;color:var(--muted);font-weight:600}
+select{width:100%;min-height:52px;margin-top:6px;padding:12px 40px 12px 14px;background:#F7F7FA url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236E6E73' stroke-width='2' fill='none'/%3E%3C/svg%3E") no-repeat right 14px center;
+  border:1px solid #DADAE4;border-radius:14px;font-size:16px;-webkit-appearance:none;-moz-appearance:none;appearance:none;
+  text-overflow:ellipsis;white-space:nowrap;overflow:hidden;transition:border-color .2s,box-shadow .2s}
+select:focus{border-color:var(--red);box-shadow:0 0 0 4px rgba(237,27,46,.12);outline:none}
+.preview{display:block;margin-top:8px;font-size:14px;line-height:1.5;color:var(--ink);font-weight:400}
+.preview:empty{display:none}
+
+/* Kiểm tra + điểm */
+.checking{display:flex;align-items:center;justify-content:center;gap:12px;padding:30px;margin-top:20px;border-radius:20px;background:#FAFAFC;color:var(--muted);font-weight:700}
+.spinner{width:22px;height:22px;border:3px solid #E5E5EA;border-top-color:var(--red);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.score{display:flex;align-items:center;gap:16px;padding:22px;border-radius:22px;background:var(--green-bg);margin-top:8px;animation:scoreReveal .6s var(--ease)}
+.score.partial{background:var(--warn-bg)}
+.score .big{font-size:32px;font-weight:800;letter-spacing:-.03em;line-height:1;flex-shrink:0}
+.score p{font-size:14px;color:var(--muted);margin-top:4px}
+@keyframes scoreReveal{0%{opacity:0;transform:translateY(18px) scale(.94)}70%{transform:translateY(-3px) scale(1.015)}100%{opacity:1;transform:none}}
+
+/* Review card */
+.review-list{display:grid;gap:12px;margin-top:16px}
+.review-card{position:relative;overflow:hidden;padding:16px 18px;border-radius:18px;background:#fff;border:1px solid var(--line);
+  opacity:0;animation:itemReveal .45s var(--ease) forwards;animation-delay:calc(var(--i) * 100ms + 200ms)}
+.review-card.correct{background:var(--green-bg);border-left:5px solid var(--green)}
+.review-card.wrong{background:var(--wrong-bg);border-left:5px solid var(--wrong)}
+@keyframes itemReveal{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.review-head{display:flex;gap:12px;align-items:flex-start}
+.review-body{flex:1;min-width:0}
+.status-icon{font-size:22px;line-height:1.2;flex-shrink:0}
+.review-title{font-weight:750;line-height:1.45}
+.review-status{font-size:14px;color:var(--muted);margin-top:4px;line-height:1.5}
+.correct-answer{margin-top:10px;padding:10px 13px;border-radius:12px;background:rgba(255,255,255,.85);font-size:14px;line-height:1.5}
+.correct-answer .lbl{display:block;font-size:12px;color:var(--muted);font-weight:700;margin-bottom:2px}
+.why-btn{width:100%;margin-top:12px;min-height:46px;padding:10px 14px;border-radius:13px;background:rgba(255,255,255,.85);
+  font-weight:700;text-align:left;display:flex;justify-content:space-between;align-items:center;position:relative;overflow:hidden}
+.chev{transition:transform .35s var(--ease);font-size:12px}
+.why-btn[aria-expanded=true] .chev{transform:rotate(180deg)}
+.explanation{max-height:0;overflow:hidden;opacity:0;transition:max-height .4s var(--ease),opacity .25s ease,padding .35s var(--ease);padding:0 4px;font-size:14.5px;line-height:1.6}
+.explanation.open{opacity:1;padding:12px 4px 2px}
+.explanation p+p{margin-top:8px}
+.coach{margin-top:10px;padding:11px 13px;border-radius:12px;background:#fff;border:1px dashed #D1D1D6}
+.coach b{color:var(--red-dark)}
+
+/* Kết quả */
+.result-item{padding:20px;border:1px solid var(--line);border-radius:20px;background:#fff;opacity:0;animation:itemReveal .45s var(--ease) forwards;animation-delay:calc(var(--i) * 100ms + 300ms)}
+.metric{color:var(--muted);font-size:13px;margin-top:12px}
+.metric strong{display:block;color:var(--ink);font-size:17px;margin-top:2px}
+.note{margin-top:20px;padding:18px 20px;border-radius:18px;background:#FAFAFC;font-size:14.5px;line-height:1.6}
+.note ul{margin:8px 0 0;padding-left:0;list-style:none}
+.note li+li{margin-top:6px}
+.notice{color:var(--red-dark);font-size:14px;font-weight:600;margin-top:10px}
+.notice:empty{display:none}
+
+footer{text-align:center;color:var(--muted);font-size:12px;margin-top:26px;padding:0 10px}
+
+/* Ripple */
+.ripple-dot{position:absolute;border-radius:50%;pointer-events:none;background:rgba(237,27,46,.18);transform:scale(0);animation:ripple .6s ease-out}
+.btn .ripple-dot{background:rgba(255,255,255,.4)}
+@keyframes ripple{to{transform:scale(4.5);opacity:0}}
+
+.screen{animation:pageSlide .45s var(--ease)}
+@keyframes pageSlide{from{opacity:0;transform:translateY(18px) scale(.985)}to{opacity:1;transform:none}}
+.shake{animation:shake .4s}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+
+/* Tablet */
+@media(max-width:860px){.intro-grid,.results{grid-template-columns:repeat(2,minmax(0,1fr))}.journey{grid-template-columns:repeat(2,1fr)}}
+/* Smartphone */
+@media(max-width:640px){
+  .shell{padding:0 14px calc(24px + env(safe-area-inset-bottom))}
+  .top{margin:0 -14px 14px;padding-left:calc(14px + env(safe-area-inset-left));padding-right:calc(14px + env(safe-area-inset-right))}
+  .brand-sub{display:none}
+  .card,.hero{padding:22px 18px;border-radius:24px}
+  .lead{font-size:16px}
+  .intro-grid,.results,.fields{grid-template-columns:1fr}
+  .journey{gap:8px}
+  .step{padding:13px 12px}
+  .q,.pair{padding:18px 15px}
+  .opt{padding:13px 14px;font-size:15px}
+  .order-row{padding:11px;gap:9px}
+  .order-name{font-size:15px}
+  .move{min-width:44px;min-height:44px}
+  .score{padding:18px;gap:12px}
+  .score .big{font-size:26px}
+  .review-card{padding:14px}
+  .actions.sticky{position:-webkit-sticky;position:sticky;bottom:0;z-index:30;margin:22px -18px -22px;padding:12px 18px calc(12px + env(safe-area-inset-bottom));
+    background:rgba(255,255,255,.85);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);
+    border-top:1px solid rgba(0,0,0,.06);border-radius:0 0 24px 24px}
+  .actions .btn{flex:1 1 auto;padding:12px 14px}
+}
+@media(max-width:400px){.brand{font-size:11.5px;letter-spacing:.04em}.top .mini{padding:8px 10px}}
+@media(max-width:360px){.journey{grid-template-columns:1fr}.actions .btn{flex:1 1 100%}}
+/* Trình duyệt không hỗ trợ blur (một số Android cũ) */
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.top{background:#F5F5F7}.actions.sticky{background:#fff}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-delay:0ms!important;transition-duration:.01ms!important}}
+@media print{
+  .top,button,.actions{display:none!important}
+  body{background:#fff}.card{box-shadow:none;border:1px solid #ddd}
+  .result-item,.review-card{opacity:1!important;animation:none!important;break-inside:avoid}
+  .explanation{max-height:none!important;opacity:1}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <header class="top">
+    <div>
+      <div class="brand">GIẢNG ĐỂ TIN, CẢM ĐỂ YÊU</div>
+      <div class="brand-sub">Trainer Readiness · Chương trình “Tin để yêu”</div>
+    </div>
+    <div class="clock-group" id="clockbox" hidden>
+      <span class="clock" id="clock" role="timer" aria-label="Thời gian gợi ý còn lại">10:00</span>
+      <button class="mini" id="pause" type="button">Tạm dừng</button>
+    </div>
+  </header>
+  <main id="app"></main>
+  <footer>Tài liệu huấn luyện nội bộ. Kết quả chỉ được lưu trong phiên&nbsp;này.</footer>
+</div>
+
+<script>
+"use strict";
+
+/* ===== NỘI DUNG GỐC ===== */
+const clusters = [
+  "Lịch sử hình thành và phát triển Prudential",
+  "Uy tín và tiềm lực tài chính",
+  "Các nguồn lực hỗ trợ TVV",
+  "Lộ trình đồng hành 90 ngày đầu"
+];
+const activities = [
+  "Xem hai video, ghi điều ấn tượng và chia sẻ giá trị muốn lan tỏa.",
+  "Thẻ “Tôi Tin Prudential”, bắt cặp A–B, giải thích số liệu và đổi vai.",
+  "Hoàn tất thẻ “Hệ thống hỗ trợ của tôi” và lưu danh bạ.",
+  "Trò chơi hành trình 90 ngày, phản tư rồi hoàn tất và gửi thẻ cam kết."
+];
+const outputs = [
+  "Nói được một thông tin có ý nghĩa và giá trị muốn mang đến khách hàng.",
+  "Nói đúng con số và giải thích ý nghĩa với công việc tư vấn.",
+  "Có đầu mối hỗ trợ cụ thể, gồm họ tên và điện thoại hoặc Zalo.",
+  "Có cam kết hoạt động cụ thể, lý do cá nhân và quản lý đồng hành."
+];
+const reasons = [
+  "Chia sẻ sau video giúp học viên kết nối câu chuyện thương hiệu với giá trị muốn mang đến khách hàng.",
+  "Giải thích số liệu và đổi vai giúp Trainer kiểm tra cả độ chính xác lẫn khả năng diễn đạt ý nghĩa.",
+  "Chỉ biết tên các bộ phận là chưa đủ. Danh bạ cụ thể giúp học viên chủ động tìm hỗ trợ.",
+  "Phản tư và thẻ cam kết nối trải nghiệm tại lớp với hoạt động cụ thể sau buổi học."
+];
+
+/* Mạch cảm xúc – Phần 1 “Hiểu” gồm cả Tin và Yêu */
+const journey = [
+  {k:"📖", t:"Hiểu", d:"Câu chuyện thương hiệu, uy tín và tiềm lực tài chính.", tags:["mind","heart"]},
+  {k:"🤝", t:"Tin", d:"Hiểu để tin vào nơi mình chọn gắn bó.", tags:["mind","heart"]},
+  {k:"🧭", t:"Thấy mình được đồng hành", d:"Nguồn lực hỗ trợ và con đường 90 ngày.", tags:["heart"]},
+  {k:"🔥", t:"Quyết tâm hành động", d:"Cam kết cụ thể, có lý do cá nhân.", tags:["heart","act"]}
+];
+const TAG = {
+  mind:'<span class="tag mind">🧠 Tin · Mind</span>',
+  heart:'<span class="tag heart">❤️ Yêu · Heart</span>',
+  act:'<span class="tag act">🎯 Hành động</span>'
+};
+
+/* VÒNG 1 */
+const goals = [
+  {t:"Hiểu câu chuyện hình thành thương hiệu Prudential.", ok:true, tags:["mind","heart"],
+   why:"Câu chuyện thương hiệu là điểm khởi đầu của niềm tin. Trainer không chỉ kể sự kiện, mà cần giúp học viên cảm nhận được giá trị muốn mang đến khách hàng."},
+  {t:"Hiểu nền tảng hỗ trợ dựa trên uy tín và tiềm lực tài chính của Prudential.", ok:true, tags:["mind","heart"],
+   why:"Số liệu phục vụ việc hiểu và giải thích cho khách hàng. Học viên cần nói được ý nghĩa của con số, không chỉ nhớ con số."},
+  {t:"Xác định lộ trình đồng hành 90 ngày đầu của TVV mới.", ok:true, tags:["mind","heart"],
+   why:"Lộ trình rõ ràng giúp học viên thấy con đường phía trước và thấy mình được đồng hành."},
+  {t:"Quyết tâm hành động để khởi đầu thành công.", ok:true, tags:["heart","act"],
+   why:"Đây là điểm đến cảm xúc của buổi học. Niềm tin cần chuyển thành cam kết hành động cụ thể."},
+  {t:"Thành thạo cách tính chi tiết tất cả khoản thu nhập ngay trong buổi.", ok:false, tags:[],
+   why:"Phần thu nhập chỉ giới thiệu tổng thể, không dạy toàn bộ cách tính."},
+  {t:"Ghi nhớ toàn bộ số liệu và giải thưởng là kết quả cuối cùng của buổi học.", ok:false, tags:[],
+   why:"Ghi nhớ số liệu không phải đích đến. Đích đến là hiểu, tin và giải thích được ý nghĩa."}
+];
+
+/* VÒNG 2 */
+const logicQs = [
+  {ask:"Vì sao chương trình mở đầu bằng “Lịch sử hình thành” và “Uy tín, tiềm lực tài chính”?",
+   opts:["Giúp học viên hiểu để tin và cảm nhận được giá trị của nơi mình chọn gắn bó.",
+         "Để học viên ghi nhớ toàn bộ số liệu và giải thưởng.",
+         "Vì đây là phần dễ trình bày nhất với Trainer."], ok:0,
+   why:"Phần “Hiểu” bao gồm cả Tin và Yêu. Học viên hiểu câu chuyện và số liệu để tin, đồng thời cảm nhận được giá trị của thương hiệu. Số liệu phục vụ việc hiểu và giải thích cho khách hàng, không nhằm để ghi nhớ.",
+   coach:"Dẫn bằng câu chuyện và ý nghĩa, đừng đọc dữ kiện. Hãy hỏi học viên: “Điều này có ý nghĩa gì với khách hàng của bạn?”"},
+  {ask:"Vì sao chương trình giới thiệu nguồn lực hỗ trợ trước khi chốt cam kết?",
+   opts:["Để học viên thấy mình có người đồng hành và con đường rõ ràng trước khi cam kết hành động.",
+         "Để kéo dài thời lượng trước phần cam kết.",
+         "Thứ tự này có thể đảo tùy Trainer."], ok:0,
+   why:"Hai cụm sau giúp học viên thấy nguồn lực và con đường. Phần cuối nối những điều đó với cam kết hành động.",
+   coach:"Giúp học viên chuyển từ cảm giác “mình đi một mình” sang “mình có người đồng hành”. Khi đó, cam kết đến từ quyết tâm thay vì áp lực."}
+];
+
+/* VÒNG 4 */
+const scenarios = [
+  {cluster:0, tags:["mind","heart"],
+   scene:"Trước khi chiếu video, Trainer nói: “Mọi người xem video cho biết nhé.” Xem xong, Trainer chuyển ngay sang slide tiếp theo.",
+   opts:["Dẫn dắt để học viên xem video với một câu hỏi trong đầu. Sau video, mời học viên ghi điều ấn tượng và chia sẻ giá trị muốn lan tỏa.",
+         "Chiếu thêm một video nữa để tăng cảm xúc.",
+         "Tóm tắt lại nội dung video để học viên không bỏ sót thông tin."], ok:0,
+   lost:"Học viên chỉ nhận thông tin, chưa kết nối cảm xúc với thương hiệu.",
+   why:reasons[0],
+   coach:"Video là khoảnh khắc “Yêu”. Hãy để lớp lắng lại vài giây trước khi mời chia sẻ."},
+  {cluster:1, tags:["mind","heart"],
+   scene:"Trainer đọc nhanh các con số về uy tín và tiềm lực tài chính, rồi yêu cầu học viên ghi nhớ.",
+   opts:["Dùng thẻ “Tôi Tin Prudential”. Cho học viên bắt cặp A–B để giải thích ý nghĩa của con số với công việc tư vấn, sau đó đổi vai.",
+         "Phát bảng số liệu để học viên tự học sau buổi.",
+         "Bổ sung thêm số liệu và giải thưởng để tăng sức thuyết phục."], ok:0,
+   lost:"Học viên nhớ con số nhưng không giải thích được ý nghĩa với khách hàng.",
+   why:reasons[1],
+   coach:"Lắng nghe học viên nói. Kiểm tra cả độ chính xác lẫn cách họ diễn đạt ý nghĩa."},
+  {cluster:2, tags:["mind","heart"],
+   scene:"Trainer trình chiếu sơ đồ các bộ phận hỗ trợ. Học viên gật đầu và lớp chuyển sang phần tiếp theo.",
+   opts:["Dẫn học viên hoàn tất thẻ “Hệ thống hỗ trợ của tôi”, ghi họ tên cùng điện thoại hoặc Zalo cụ thể, rồi lưu danh bạ ngay tại lớp.",
+         "Đọc to tên từng bộ phận hai lần cho học viên nhớ.",
+         "Gửi file sơ đồ cho học viên sau buổi học."], ok:0,
+   lost:"Học viên biết tên bộ phận nhưng không biết cần liên hệ ai khi cần hỗ trợ.",
+   why:reasons[2],
+   coach:"Đi một vòng lớp để kiểm tra danh bạ đã được lưu. Đây là bằng chứng hữu hình rằng học viên có người đồng hành."},
+  {cluster:3, tags:["heart","act"],
+   scene:"Kết thúc trò chơi hành trình 90 ngày, thời gian còn ít. Trainer phát ngay thẻ cam kết và học viên ghi: “Em sẽ cố gắng hết sức.”",
+   opts:["Giữ khoảnh khắc phản tư. Sau đó, hướng dẫn học viên ghi hoạt động cụ thể, lý do cá nhân và người quản lý đồng hành.",
+         "Chấp nhận, vì quan trọng nhất là học viên có tinh thần.",
+         "Bỏ thẻ cam kết và thay bằng lời động viên chung của Trainer."], ok:0,
+   lost:"Khoảnh khắc phản tư bị mất. Cam kết chung chung nên khó dẫn tới hành động sau buổi học.",
+   why:reasons[3],
+   coach:"Nếu thiếu thời gian, hãy rút gọn phần khác. Đừng cắt phần phản tư và cam kết."},
+  {cluster:null, tags:["mind"],
+   scene:"Một học viên hỏi chi tiết cách tính thu nhập. Trainer dừng chương trình để hướng dẫn cách tính từng khoản.",
+   opts:["Giới thiệu tổng thể, ghi nhận câu hỏi và kết nối học viên với quản lý hoặc đầu mối hỗ trợ để làm rõ sau.",
+         "Hướng dẫn tính chi tiết vì học viên đang quan tâm.",
+         "Không trả lời để giữ đúng thời lượng."], ok:0,
+   lost:"Mạch chương trình bị gián đoạn và mục tiêu buổi học bị lệch.",
+   why:"Phần thu nhập chỉ giới thiệu tổng thể, không dạy toàn bộ cách tính.",
+   coach:"Ghi nhận câu hỏi một cách trân trọng. Đây cũng là cơ hội để nhắc học viên dùng hệ thống hỗ trợ vừa lưu."},
+  {cluster:null, tags:["heart"],
+   scene:"Trong phần chia sẻ, lớp im lặng. Để tiết kiệm thời gian, Trainer tự nói luôn câu trả lời mẫu.",
+   opts:["Đặt câu hỏi gợi mở, cho thêm thời gian suy nghĩ và mời học viên nói bằng lời của chính mình.",
+         "Nói câu trả lời mẫu để đảm bảo đúng thời lượng.",
+         "Bỏ qua phần chia sẻ và chuyển nội dung."], ok:0,
+   lost:"Học viên mất trải nghiệm tự khám phá và không đạt đầu ra “nói được”.",
+   why:"Đầu ra của các hoạt động yêu cầu học viên tự nói được. Trainer là người dẫn dắt, không nói thay học viên.",
+   coach:"Im lặng thường là lúc học viên đang suy nghĩ. Hãy chờ thêm vài giây, hoặc mời học viên chia sẻ theo cặp trước."}
+];
+
+const rounds = [
+  {title:"Đích đến: Tin & Yêu", short:"Mục tiêu về hiểu biết và cảm xúc", min:2,
+   intro:"Sau buổi “Tin để yêu”, TVV mới cần đạt được những gì về hiểu biết (Mind) và cảm nhận (Heart)? Chọn tất cả phương án phù hợp."},
+  {title:"Mạch cảm xúc", short:"Trình tự và ý đồ thiết kế", min:2,
+   intro:"Sắp xếp bốn cụm theo trình tự chương trình. Sau đó, chọn lý do thiết kế phù hợp."},
+  {title:"Vận hành hoạt động", short:"Hoạt động và đầu ra", min:3,
+   intro:"Với mỗi cụm, chọn hoạt động trọng điểm và đầu ra học viên tương ứng."},
+  {title:"Mind & Heart Check", short:"Tình huống dẫn giảng", min:3,
+   intro:"Đọc từng tình huống trên lớp. Chọn cách dẫn giảng giữ được cả Tin (Mind) và Yêu (Heart)."}
+];
+const maximum = [6, 6, 8, 6];
+const app = document.getElementById("app");
+let state;
+
+/* ===== Helpers ===== */
+const shuffle = a => { const r=[...a]; for(let i=r.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[r[i],r[j]]=[r[j],r[i]];} return r; };
+const idx = n => Array.from({length:n},(_,i)=>i);
+const haptic = (ms=15) => { try{ if(navigator.vibrate) navigator.vibrate(ms); }catch(e){} };
+const tags = arr => arr.length ? `<span class="mh">${arr.map(t=>TAG[t]).join("")}</span>` : "";
+const topOfPage = () => window.scrollTo({top:0,behavior:"smooth"});
+function focusTitle(){ const h=app.querySelector("h1,h2"); if(h){h.tabIndex=-1;try{h.focus({preventScroll:true});}catch(e){}} }
+
+/* Chống chữ mồ côi: nối 2 từ cuối của mỗi khối văn bản bằng khoảng trắng không ngắt.
+   Hoạt động trên mọi trình duyệt, kể cả Safari iOS và Android cũ chưa hỗ trợ text-wrap. */
+const NO_ORPHAN = "h1,h2,h3,p,li,.review-title,.review-status,.scene,.ask,.opt .t,.choice-text,.order-name,.preview,.step b,.step .d,.correct-answer,.coach,.round-intro,.lead";
+function fixOrphans(root=document){
+  root.querySelectorAll(NO_ORPHAN).forEach(el=>{
+    const walker=document.createTreeWalker(el,NodeFilter.SHOW_TEXT);
+    let last=null,n; while((n=walker.nextNode())) if(n.nodeValue.trim()) last=n;
+    if(!last) return;
+    const v=last.nodeValue.replace(/\s+$/,"");
+    const words=v.trim().split(/\s+/);
+    if(words.length<4) return;                 // câu quá ngắn: giữ nguyên
+    if(words[words.length-1].length>14) return; // từ cuối quá dài: tránh tràn dòng
+    last.nodeValue = v.replace(/\s+(\S+)$/,"\u00A0$1") + last.nodeValue.slice(v.length);
+  });
+}
+
+function reset(){
+  let order = shuffle(idx(4)); if(order.every((v,i)=>v===i)) order.push(order.shift());
+  state = {
+    screen:"home", round:0, reviewing:false,
+    goals:new Set(), goalOrder:shuffle(idx(6)),
+    order, logic:[null,null], logicOpt:logicQs.map(q=>shuffle(idx(q.opts.length))),
+    pairs:Array.from({length:4},()=>["",""]), activityOrder:shuffle(idx(4)), outputOrder:shuffle(idx(4)),
+    scen:Array(scenarios.length).fill(null), scenOpt:scenarios.map(s=>shuffle(idx(s.opts.length))),
+    checked:[false,false,false,false], first:[null,null,null,null], current:[null,null,null,null],
+    seconds:600, paused:false
+  };
+  render();
+}
+
+function render(){
+  document.getElementById("clockbox").hidden = state.screen==="home";
+  document.getElementById("pause").hidden = state.screen!=="round";
+  updateClock();
+  if(state.screen==="home") renderHome();
+  else if(state.screen==="result") renderResult();
+  else renderRound();
+  fixOrphans(app);
+  focusTitle();
+}
+
+/* ===== HOME ===== */
+function journeyHTML(){
+  return `<div class="journey">${journey.map((j,i)=>`
+    <div class="step"><div class="k">${j.k}</div><b>${i+1}. ${j.t}</b><span class="d">${j.d}</span>${tags(j.tags)}</div>`).join("")}</div>`;
+}
+function renderHome(){
+  app.innerHTML = `
+  <section class="hero card screen">
+    <p class="eyebrow">Trainer Readiness · Tin để yêu</p>
+    <h1><span class="hero-line">Giảng để <span class="red">Tin</span>,</span><span class="hero-line">Cảm để <span class="red">Yêu</span></span></h1>
+    <p class="lead">Không chỉ nhớ nội dung, Trainer cần nắm <b>mạch cảm xúc</b> của từng phần và biết <b>vận hành hoạt động</b> để học viên thật sự cảm nhận.</p>
+    <p class="section-label">Mạch cảm xúc của chương trình</p>
+    ${journeyHTML()}
+    <div class="intro-grid">
+      ${rounds.map((r,i)=>`
+        <article class="intro-item">
+          <div class="number">VÒNG 0${i+1} · ${r.min}&nbsp;PHÚT</div>
+          <h3>${r.title}</h3>
+          <p class="muted">${r.short}</p>
+        </article>`).join("")}
+    </div>
+    <div class="actions"><button class="btn" id="start" type="button">Bắt đầu</button></div>
+    <p class="small muted" style="margin-top:14px">Thời gian gợi ý: 10&nbsp;phút. Đồng hồ không khóa bài khi hết giờ.</p>
+  </section>`;
+  document.getElementById("start").onclick = () => { haptic(); state.screen="round"; render(); topOfPage(); };
+}
+
+/* ===== ROUND ===== */
+function renderRound(){
+  const n = state.round, checked = state.checked[n];
+  const nextLabel = state.reviewing ? "Về kết quả" : (n===3 ? "🎯 Xem kết quả" : "Vòng tiếp theo →");
+  app.innerHTML = `
+  <section class="card screen">
+    <div class="progress" role="img" aria-label="Vòng ${n+1} trên 4">
+      ${rounds.map((_,i)=>`<span class="${i<n||(i===n&&checked)?"active":""}"></span>`).join("")}
+    </div>
+    <p class="eyebrow">Vòng 0${n+1} / 04</p>
+    <h2>${rounds[n].title}</h2>
+    <p class="round-intro">${rounds[n].intro}</p>
+    <div id="question"></div>
+    <p id="notice" class="notice" role="status"></p>
+    <div class="actions sticky">
+      <button class="btn" id="primary" type="button">${checked ? nextLabel : "Kiểm tra câu trả lời"}</button>
+      ${checked ? '<button class="btn secondary" id="edit" type="button">Sửa câu trả lời</button>' : ""}
+    </div>
+  </section>`;
+  requestAnimationFrame(()=>{ const s=app.querySelectorAll(".progress span")[n]; if(s && !checked) setTimeout(()=>s.classList.add("active"),60); });
+
+  const q = document.getElementById("question");
+  if(checked) renderReview(q);
+  else [renderGoals,renderOrder,renderPairs,renderScenarios][n](q);
+
+  document.getElementById("primary").onclick = () => {
+    haptic();
+    if(!state.checked[n]) return submit(n, q);
+    if(state.reviewing || n===3) state.screen="result";
+    else state.round++;
+    render(); topOfPage();
+  };
+  const edit = document.getElementById("edit");
+  if(edit) edit.onclick = () => { haptic(); state.checked[n]=false; renderRound(); fixOrphans(app); topOfPage(); };
+}
+
+function missing(n){
+  if(n===1 && state.logic.some(v=>v===null)) return "Bạn hãy chọn lý do cho cả hai câu hỏi.";
+  if(n===2 && state.pairs.some(r=>r.includes(""))) return "Bạn hãy chọn đủ hoạt động và đầu ra cho cả bốn cụm.";
+  if(n===3 && state.scen.some(v=>v===null)) return "Bạn hãy chọn cách xử lý cho tất cả tình huống.";
+  return "";
+}
+
+function submit(n, q){
+  const msg = missing(n);
+  const notice = document.getElementById("notice");
+  if(msg){
+    notice.textContent = msg; notice.classList.remove("shake"); void notice.offsetWidth; notice.classList.add("shake");
+    haptic([20,40,20]); return;
+  }
+  const btn = document.getElementById("primary");
+  btn.disabled = true; btn.textContent = "Đang kiểm tra…";
+  q.innerHTML = `<div class="checking" role="status"><span class="spinner"></span>Đang kiểm tra…</div>`;
+  setTimeout(()=>{
+    const items = reviewItems(n);
+    const score = n===2 ? items.reduce((t,it)=>t+it.pts,0) : items.filter(i=>i.ok).length;
+    if(state.first[n]===null) state.first[n]=score;
+    state.current[n]=score; state.checked[n]=true;
+    haptic(score===maximum[n] ? [15,60,15] : 25);
+    renderRound(); fixOrphans(app);
+    const el=document.getElementById("question"); if(el) el.scrollIntoView({behavior:"smooth",block:"start"});
+  }, 750);
+}
+
+/* Vòng 1 */
+function renderGoals(c){
+  c.innerHTML = state.goalOrder.map(id=>`
+    <label class="choice ${state.goals.has(id)?"on":""}">
+      <input type="checkbox" data-goal="${id}" ${state.goals.has(id)?"checked":""}>
+      <span class="box" aria-hidden="true"></span><span class="choice-text">${goals[id].t}</span>
+    </label>`).join("");
+  c.querySelectorAll("input").forEach(inp=>inp.onchange=()=>{
+    const id=+inp.dataset.goal; inp.checked?state.goals.add(id):state.goals.delete(id);
+    inp.closest(".choice").classList.toggle("on",inp.checked); haptic(10);
+  });
+}
+
+/* Vòng 2 */
+function optionHTML(i, order, opts, selected){
+  return order.map(o=>`<button type="button" class="opt ${selected===o?"on":""}" data-i="${i}" data-o="${o}" aria-pressed="${selected===o}">
+    <span class="dot" aria-hidden="true"></span><span class="t">${opts[o]}</span></button>`).join("");
+}
+function bindOptions(c, arr){
+  c.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
+    const i=+b.dataset.i, o=+b.dataset.o; arr[i]=o; haptic(10);
+    c.querySelectorAll(`.opt[data-i="${i}"]`).forEach(x=>{const on=+x.dataset.o===o;x.classList.toggle("on",on);x.setAttribute("aria-pressed",on);});
+    document.getElementById("notice").textContent="";
+  });
+}
+function renderOrder(c, bumped){
+  c.innerHTML = `
+    <p class="section-label">Phần A · Trình tự</p>
+    <div>${state.order.map((id,p)=>`
+      <div class="order-row ${bumped===p?"bump":""}">
+        <span class="rank">${p+1}</span><span class="order-name">${clusters[id]}</span>
+        <div class="moves">
+          <button class="move" type="button" data-pos="${p}" data-dir="-1" aria-label="Đưa ${clusters[id]} lên" ${p===0?"disabled":""}>↑</button>
+          <button class="move" type="button" data-pos="${p}" data-dir="1" aria-label="Đưa ${clusters[id]} xuống" ${p===3?"disabled":""}>↓</button>
+        </div>
+      </div>`).join("")}</div>
+    <p class="section-label">Phần B · Ý đồ thiết kế</p>
+    ${logicQs.map((lq,i)=>`<div class="q"><p class="ask">${i+1}. ${lq.ask}</p>${optionHTML(i,state.logicOpt[i],lq.opts,state.logic[i])}</div>`).join("")}`;
+  c.querySelectorAll("[data-dir]").forEach(b=>b.onclick=()=>{
+    const p=+b.dataset.pos, d=+b.dataset.dir, t=p+d;
+    [state.order[p],state.order[t]]=[state.order[t],state.order[p]]; haptic(10);
+    renderOrder(c, t); fixOrphans(c);
+    const row=c.querySelectorAll(".order-row")[t];
+    const btn=row.querySelector(`[data-dir="${d}"]:not(:disabled)`)||row.querySelector("button:not(:disabled)");
+    if(btn) try{btn.focus({preventScroll:true});}catch(e){}
+  });
+  bindOptions(c, state.logic);
+}
+
+/* Vòng 3 */
+function renderPairs(c){
+  c.innerHTML = clusters.map((cl,row)=>`
+    <article class="pair">
+      <div class="number">CỤM 0${row+1}</div><h3>${cl}</h3>
+      <div class="fields">
+        ${[activities,outputs].map((items,f)=>`
+          <label class="field">${f===0?"Hoạt động trọng điểm":"Đầu ra học viên"}
+            <select data-row="${row}" data-field="${f}">
+              <option value="">Chọn phương án…</option>
+              ${(f===0?state.activityOrder:state.outputOrder).map(id=>`<option value="${id}" ${state.pairs[row][f]===String(id)?"selected":""}>${items[id]}</option>`).join("")}
+            </select>
+            <span class="preview" id="pv-${row}-${f}">${state.pairs[row][f]===""?"":items[+state.pairs[row][f]]}</span>
+          </label>`).join("")}
+      </div>
+    </article>`).join("");
+  c.querySelectorAll("select").forEach(s=>s.onchange=()=>{
+    const r=+s.dataset.row,f=+s.dataset.field; state.pairs[r][f]=s.value; haptic(10);
+    const pv=document.getElementById(`pv-${r}-${f}`);
+    pv.textContent = s.value===""?"":(f===0?activities:outputs)[+s.value];
+    fixOrphans(pv.parentElement);
+    document.getElementById("notice").textContent="";
+  });
+}
+
+/* Vòng 4 */
+function renderScenarios(c){
+  c.innerHTML = scenarios.map((s,i)=>`
+    <div class="q">
+      <div class="number">TÌNH HUỐNG 0${i+1}${s.cluster!==null?" · CỤM 0"+(s.cluster+1):""}</div>
+      <p class="scene">${s.scene}</p>
+      <p class="ask">Cách dẫn giảng phù hợp nhất là gì?</p>
+      ${optionHTML(i,state.scenOpt[i],s.opts,state.scen[i])}
+    </div>`).join("");
+  bindOptions(c, state.scen);
+}
+
+/* ===== REVIEW ===== */
+function reviewItems(n){
+  if(n===0) return state.goalOrder.map(id=>{
+    const g=goals[id], sel=state.goals.has(id), ok=sel===g.ok;
+    return {ok, title:g.t,
+      status: ok?"Bạn nắm đúng ý đồ thiết kế.":(g.ok?"Đây là mục tiêu cần đạt nhưng bạn chưa chọn.":"Đây không phải mục tiêu của buổi học."),
+      answer: ok?"":(g.ok?"Cần chọn":"Không chọn"), tags:g.tags, why:`<p>${g.why}</p>`};
+  });
+  if(n===1){
+    const ord = state.order.map((id,p)=>{
+      const ok=id===p;
+      return {ok, title:`Vị trí ${p+1}: ${clusters[id]}`,
+        status: ok?"Bạn sắp xếp đúng mạch chương trình.":"Vị trí này chưa đúng mạch chương trình.",
+        answer: ok?"":clusters[p], tags:journey[p].tags,
+        why:`<p>Vị trí ${p+1} trong mạch cảm xúc là <b>${journey[p].k} ${journey[p].t}</b>: ${journey[p].d}</p><p>Hai cụm đầu giúp học viên hiểu để tin và cảm nhận giá trị thương hiệu. Hai cụm tiếp theo giúp thấy nguồn lực và con đường. Phần cuối nối với cam kết hành động.</p>`};
+    });
+    const lg = logicQs.map(lq=>{
+      const ok=state.logic[logicQs.indexOf(lq)]===lq.ok;
+      return {ok, title:lq.ask,
+        status: ok?"Bạn hiểu đúng ý đồ thiết kế.":"Bạn đang nhớ trình tự, nhưng chưa nắm mục đích thiết kế.",
+        answer: ok?"":lq.opts[lq.ok], tags:["mind","heart"], why:`<p>${lq.why}</p>`, coach:lq.coach};
+    });
+    return [...ord, ...lg];
+  }
+  if(n===2) return clusters.map((cl,id)=>{
+    const [a,o]=state.pairs[id], aOk=a===String(id), oOk=o===String(id), ok=aOk&&oOk;
+    const wrong=[]; if(!aOk) wrong.push(`<b>Hoạt động:</b> ${activities[id]}`); if(!oOk) wrong.push(`<b>Đầu ra:</b> ${outputs[id]}`);
+    return {ok, pts:(aOk?1:0)+(oOk?1:0), title:`Cụm 0${id+1} · ${cl}`,
+      status: ok?"Đúng cả hoạt động và đầu ra.":(aOk||oOk?"Đúng một trong hai lựa chọn.":"Cần xem lại cả hai lựa chọn."),
+      answer: ok?"":wrong.join("<br>"), tags:journey[id].tags,
+      why:`<p><b>Hoạt động:</b> ${activities[id]}</p><p><b>Đầu ra:</b> ${outputs[id]}</p><p>${reasons[id]}</p>`};
+  });
+  return scenarios.map((s,i)=>{
+    const ok=state.scen[i]===s.ok;
+    return {ok, title:`Tình huống 0${i+1}`, scene:s.scene,
+      status: ok?"Bạn giữ được cả Tin và Yêu trong tình huống này.":"Cách xử lý này chưa giữ được ý đồ thiết kế.",
+      answer: ok?"":s.opts[s.ok], tags:s.tags,
+      why:`<p><b>Điều sẽ mất nếu dẫn sai:</b> ${s.lost}</p><p>${s.why}</p>`, coach:s.coach};
+  });
+}
+
+function renderReview(c){
+  const n=state.round, items=reviewItems(n), score=state.current[n], full=score===maximum[n];
+  c.innerHTML = `
+    <div class="score ${full?"":"partial"}" aria-live="polite">
+      <div class="big">${full?"✅":"🎯"} ${score}/${maximum[n]}</div>
+      <div><b>${full?"Bạn nắm vững ý đồ thiết kế của vòng này.":"Một vài điểm cần làm rõ."}</b>
+      <p>Chạm “💡&nbsp;Tại sao?” để xem giải thích khi bạn cần.</p></div>
+    </div>
+    <div class="review-list">
+      ${items.map((it,i)=>`
+        <article class="review-card ${it.ok?"correct":"wrong"}" style="--i:${i}">
+          <div class="review-head">
+            <span class="status-icon" aria-label="${it.ok?"Đúng":"Chưa đúng"}">${it.ok?"✅":"❌"}</span>
+            <div class="review-body">
+              <p class="review-title">${it.title}</p>
+              ${it.scene?`<p class="review-status">${it.scene}</p>`:""}
+              <p class="review-status">${it.status}</p>
+              ${tags(it.tags||[])}
+              ${it.answer?`<div class="correct-answer"><span class="lbl">Đáp án phù hợp</span>${it.answer}</div>`:""}
+            </div>
+          </div>
+          <button class="why-btn" type="button" aria-expanded="false"><span>💡 Tại sao?</span><span class="chev">▼</span></button>
+          <div class="explanation">${it.why}${it.coach?`<p class="coach"><b>Gợi ý dẫn giảng:</b> ${it.coach}</p>`:""}</div>
+        </article>`).join("")}
+    </div>`;
+  c.querySelectorAll(".why-btn").forEach(b=>b.onclick=()=>{
+    const open=b.getAttribute("aria-expanded")==="true", p=b.nextElementSibling;
+    b.setAttribute("aria-expanded",String(!open));
+    if(open){ p.style.maxHeight=p.scrollHeight+"px"; requestAnimationFrame(()=>{p.style.maxHeight="0px";}); p.classList.remove("open"); }
+    else { p.classList.add("open"); p.style.maxHeight=p.scrollHeight+40+"px"; }
+    b.firstElementChild.textContent = open?"💡 Tại sao?":"💡 Thu gọn"; haptic(10);
+  });
+}
+// Cập nhật chiều cao accordion khi xoay màn hình / đổi kích thước
+window.addEventListener("resize",()=>document.querySelectorAll(".explanation.open").forEach(p=>p.style.maxHeight=p.scrollHeight+40+"px"));
+
+/* ===== RESULT ===== */
+function renderResult(){
+  const total=state.current.reduce((a,b)=>a+(b||0),0), max=maximum.reduce((a,b)=>a+b,0), full=total===max;
+  const firstTotal=state.first.reduce((a,b)=>a+(b||0),0);
+  const headline = full ? "Bạn đã sẵn sàng: Giảng để Tin, Cảm để Yêu"
+    : (total/max>=.7 ? "Bạn đã đi được phần lớn chặng đường" : "Hãy ôn lại vài điểm trước khi đứng lớp");
+  app.innerHTML = `
+  <section class="card screen">
+    <p class="eyebrow">Kết quả · Trainer Readiness</p>
+    <h2>${headline}</h2>
+    <div class="score ${full?"":"partial"}" style="margin-top:18px">
+      <div class="big">${full?"✅":"🎯"} ${total}/${max}</div>
+      <div><b>Tổng điểm hiện tại</b><p>Lần đầu: ${firstTotal}/${max}. Bạn có thể mở từng vòng để xem lại hoặc điều chỉnh.</p></div>
+    </div>
+    <div class="results">
+      ${rounds.map((r,n)=>`
+        <article class="result-item" style="--i:${n}">
+          <div class="number">VÒNG 0${n+1}</div>
+          <h3>${state.current[n]===maximum[n]?"✅":"❌"} ${r.title}</h3>
+          <div class="metric">Lần đầu<strong>${state.first[n]}/${maximum[n]}</strong></div>
+          <div class="metric">Hiện tại<strong>${state.current[n]}/${maximum[n]}</strong></div>
+          <div class="actions" style="margin-top:14px"><button class="mini" type="button" data-review="${n}">${state.current[n]===maximum[n]?"💡 Xem lại":"↺ Ôn lại vòng này"}</button></div>
+        </article>`).join("")}
+    </div>
+    <p class="section-label">Ghi nhớ khi đứng lớp</p>
+    ${journeyHTML()}
+    <div class="note">
+      <b>Hai điều Trainer cần giữ:</b>
+      <ul>
+        <li>🧠❤️ Nắm rõ nội dung, cảm xúc của nội dung và cách dẫn truyền để học viên vừa <b>Tin</b> vừa <b>Yêu</b>.</li>
+        <li>🎯 Dẫn học viên thực hiện trọn vẹn từng hoạt động và công cụ để đạt đúng đầu ra.</li>
+      </ul>
+      <p class="small muted" style="margin-top:10px">Đây là công cụ ôn tập gợi ý cho TTT, không phải chuẩn chứng nhận năng lực đứng lớp.</p>
+    </div>
+    <div class="actions">
+      <button class="btn" id="restart" type="button">Bắt đầu phiên mới</button>
+      <button class="btn secondary" id="print" type="button">In kết quả</button>
+    </div>
+  </section>`;
+  app.querySelectorAll("[data-review]").forEach(b=>b.onclick=()=>{
+    haptic(); state.round=+b.dataset.review; state.screen="round"; state.reviewing=true; render(); topOfPage();
+  });
+  document.getElementById("restart").onclick=()=>{ if(confirm("Bắt đầu phiên mới và xóa kết quả hiện tại?")){ reset(); topOfPage(); } };
+  document.getElementById("print").onclick=()=>{ app.querySelectorAll(".result-item").forEach(e=>e.style.opacity=1); window.print(); };
+}
+
+/* ===== ĐỒNG HỒ ===== */
+function updateClock(){
+  document.getElementById("clock").textContent = state.seconds>0
+    ? `${String(Math.floor(state.seconds/60)).padStart(2,"0")}:${String(state.seconds%60).padStart(2,"0")}` : "Ôn thêm";
+  const p=document.getElementById("pause");
+  p.textContent = state.paused?"Tiếp tục":"Tạm dừng"; p.setAttribute("aria-pressed",String(state.paused));
+}
+document.getElementById("pause").onclick=()=>{ haptic(); state.paused=!state.paused; updateClock(); };
+let lastTick=Date.now();
+setInterval(()=>{
+  const now=Date.now(), el=Math.floor((now-lastTick)/1000); if(el<1) return; lastTick+=el*1000;
+  if(state.screen==="round" && !state.paused){ state.seconds=Math.max(0,state.seconds-el); updateClock(); }
+},250);
+
+/* ===== RIPPLE cho mọi nút, thẻ, accordion ===== */
+document.addEventListener("pointerdown", e=>{
+  const t=e.target.closest("button,.choice,.opt,.why-btn,.order-row");
+  if(!t || t.disabled) return;
+  const r=t.getBoundingClientRect(), s=Math.max(r.width,r.height)/2, d=document.createElement("span");
+  d.className="ripple-dot"; d.style.width=d.style.height=s+"px";
+  d.style.left=(e.clientX-r.left-s/2)+"px"; d.style.top=(e.clientY-r.top-s/2)+"px";
+  t.appendChild(d); setTimeout(()=>d.remove(),650);
+},{passive:true});
+
+reset();
+</script>
+</body>
+</html>
